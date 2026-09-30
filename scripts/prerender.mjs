@@ -1,122 +1,86 @@
-// Prerender the SPA into static HTML so crawlers see the finished page.
+// Prerender the page into static HTML so crawlers see the finished page.
 //
-// Googlebot can run JS but queues it; LinkedIn, Slack, WhatsApp, Bing and
-// most LLM crawlers do not run it at all. Without this step a shared link
-// previews as a boot spinner. Runs as the last step of `npm run build`.
+// LinkedIn, Slack, WhatsApp, Bing and most AI crawlers do not run JavaScript.
+// Without this step they would see only a loading square. Runs as the last
+// step of `npm run build`, after Vite has built the client and the server
+// entry (src/entry-server.jsx).
 //
-// Two rules, learned the hard way on the studio site:
+// It uses React's own server renderer, not a browser, so it runs anywhere
+// Node runs, including Vercel's build machine, which has no Chromium.
+//
+// Two rules:
 //   1. One build path. If a step matters, it goes in `build`.
-//   2. Assert the output, not the exit code. A run that writes a shell
+//   2. Check the output, not the exit code. A run that writes an empty shell
 //      exits 0 and looks like success.
 
-import { chromium } from 'playwright'
-import { createServer } from 'node:http'
-import { readFile, writeFile, stat } from 'node:fs/promises'
-import { extname, join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { readFile, writeFile, rm } from 'node:fs/promises'
+import { join, dirname } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const DIST = join(__dirname, '..', 'dist')
-const ROUTES = ['/']
+const ROOT = join(__dirname, '..')
+const DIST = join(ROOT, 'dist')
+const SSR = join(ROOT, 'dist-ssr')
 
-const MIME = {
-  '.html': 'text/html; charset=utf-8', '.js': 'application/javascript; charset=utf-8',
-  '.mjs': 'application/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png',
-  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.ico': 'image/x-icon',
-  '.txt': 'text/plain; charset=utf-8', '.pdf': 'application/pdf', '.webmanifest': 'application/manifest+json'
+// Framer Motion renders each animated block in its starting pose, for example
+// `opacity:0;transform:translateY(24px)`. A crawler that reads CSS would treat
+// those blocks as hidden, so they are written in their finished pose. React
+// replaces this markup when the page loads (main.jsx uses createRoot), and the
+// animations then play as usual.
+function settle(html) {
+  let n = 0
+  const out = html.replace(/style="([^"]*)"/g, (whole, css) => {
+    const m = css.match(/(?:^|;)\s*opacity:\s*([\d.]+)/)
+    if (!m || parseFloat(m[1]) >= 1) return whole
+    n++
+    const fixed = css
+      .replace(/(^|;)\s*opacity:\s*[\d.]+/, '$1opacity:1')
+      .replace(/(^|;)\s*transform:\s*[^;]*/, '$1transform:none')
+    return `style="${fixed}"`
+  })
+  return { html: out, settled: n }
 }
 
-function startStaticServer(root) {
-  return new Promise((resolve) => {
-    const server = createServer(async (req, res) => {
-      try {
-        let p = decodeURIComponent(new URL(req.url, 'http://x').pathname)
-        if (p === '/' || p === '') p = '/index.html'
-        let file = join(root, p)
-        try { if ((await stat(file)).isDirectory()) file = join(file, 'index.html') } catch { file = join(root, 'index.html') }
-        const data = await readFile(file)
-        res.writeHead(200, { 'Content-Type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream' })
-        res.end(data)
-      } catch { res.writeHead(404).end('Not found') }
-    })
-    server.listen(0, '127.0.0.1', () => resolve({ server, port: server.address().port }))
-  })
+function textOf(html) {
+  return html
+    .replace(/<(script|style)[\s\S]*?<\/\1>/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;|&#160;/g, ' ')
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&#x27;|&#39;|&quot;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
-async function prerenderRoute(browser, baseUrl, route) {
-  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
-  await page.goto(`${baseUrl}${route}?prerender=1`, { waitUntil: 'networkidle', timeout: 30_000 })
-
-  // Walk the page so whileInView reveals fire.
-  await page.evaluate(async () => {
-    const step = window.innerHeight * 0.8
-    for (let y = 0; y < document.body.scrollHeight; y += step) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 120)) }
-    window.scrollTo(0, 0)
-  })
-  await page.waitForTimeout(600)
-
-  // Pin anything still mid-animation to its finished state. Framer writes
-  // `opacity:0; transform:…` inline; a crawler that reads CSS but not JS
-  // would treat those blocks as invisible. Safe because main.jsx uses
-  // createRoot, not hydrateRoot — React discards this DOM on mount.
-  const pinned = await page.evaluate(() => {
-    let n = 0
-    for (const el of document.querySelectorAll('#root [style*="opacity"]')) {
-      if (parseFloat(el.style.opacity) >= 1) continue
-      el.style.opacity = '1'; el.style.transform = 'none'; n++
-    }
-    return n
-  })
-  if (pinned) console.log(`   settled ${pinned} mid-animation element(s)`)
-
-  const stats = await page.evaluate(() => {
-    const root = document.getElementById('root')
-    const boot = root?.firstElementChild?.classList.contains('boot') ?? true
-    const text = (document.body.innerText || '').replace(/\s+/g, ' ').trim()
-    return {
-      boot,
-      words: text ? text.split(' ').length : 0,
-      brand: text.includes('Farhan'),
-      products: text.includes('Plusveda') && text.includes('AshShifa'),
-      h1: document.querySelectorAll('#root h1').length,
-      sections: ['work', 'skills', 'experience', 'stack', 'contact'].filter((id) => !document.getElementById(id))
-    }
-  })
-
-  const html = await page.evaluate(() => '<!doctype html>\n' + document.documentElement.outerHTML)
-  await page.close()
-  return { html, stats }
-}
-
-function assertRendered(s, route) {
-  const fail = (m) => { throw new Error(`prerender produced unusable HTML for ${route}: ${m}`) }
-  if (s.boot) fail('#root still holds the boot spinner — React never mounted')
-  if (s.words < 400) fail(`only ${s.words} words of rendered text`)
-  if (!s.brand) fail('name absent from rendered text')
-  if (!s.products) fail('the products are missing from the rendered text')
-  if (s.h1 === 0) fail('no <h1> inside #root')
-  if (s.sections.length) fail(`sections missing from DOM: ${s.sections.join(', ')}`)
+function check(app) {
+  const text = textOf(app)
+  const words = text ? text.split(' ').length : 0
+  const h1 = (app.match(/<h1[\s>]/g) || []).length
+  const missing = ['work', 'skills', 'experience', 'stack', 'contact'].filter((id) => !app.includes(`id="${id}"`))
+  const fail = (m) => { throw new Error(`prerender produced unusable HTML: ${m}`) }
+  if (words < 400) fail(`only ${words} words of rendered text`)
+  if (!text.includes('Farhan')) fail('name absent from rendered text')
+  if (!text.includes('Plusveda') || !text.includes('AshShifa')) fail('the products are missing from the rendered text')
+  if (h1 !== 1) fail(`expected 1 <h1>, found ${h1}`)
+  if (missing.length) fail(`sections missing: ${missing.join(', ')}`)
+  return { words, h1 }
 }
 
 async function main() {
-  console.log('🔧 Prerender: serving dist')
-  const { server, port } = await startStaticServer(DIST)
-  const baseUrl = `http://127.0.0.1:${port}`
-  const browser = await chromium.launch()
-  try {
-    for (const route of ROUTES) {
-      const { html, stats } = await prerenderRoute(browser, baseUrl, route)
-      assertRendered(stats, route)
-      const out = route === '/' ? 'index.html' : join(route.slice(1), 'index.html')
-      await writeFile(join(DIST, out), html, 'utf8')
-      console.log(`✅ Prerendered → dist/${out} (${(html.length / 1024).toFixed(1)} KB, ${stats.words} words, ${stats.h1} h1)`)
-    }
-  } finally {
-    await browser.close()
-    server.close()
-  }
-  console.log('✨ Prerender done')
+  console.log('🔧 Prerender: rendering the page with React')
+  const { render } = await import(pathToFileURL(join(SSR, 'entry-server.js')).href)
+  const { html: app, settled } = settle(render())
+  if (settled) console.log(`   settled ${settled} animated block(s) into their finished pose`)
+  const { words, h1 } = check(app)
+
+  const file = join(DIST, 'index.html')
+  const shell = await readFile(file, 'utf8')
+  const slot = /<div id="root">[\s\S]*?<\/div><\/div>/
+  if (!slot.test(shell)) throw new Error('could not find <div id="root"> with its boot loader in dist/index.html')
+  const out = shell.replace(slot, () => `<div id="root">${app}</div>`)
+  await writeFile(file, out, 'utf8')
+  await rm(SSR, { recursive: true, force: true })
+  console.log(`✅ Prerendered → dist/index.html (${(out.length / 1024).toFixed(1)} KB, ${words} words, ${h1} h1)`)
 }
 
 main().catch((err) => { console.error('❌ Prerender failed:', err); process.exit(1) })

@@ -39,12 +39,13 @@ src/
   sections/     Hero  Strip  Work  Skills  Experience  Stack  Contact
   components/   Nav  HomePhone  Frames  AppIcon  Reveal
   lib/          accent.jsx (page accent colour)  env.js
+  entry-server.jsx  used only at build time to prerender the page
   styles/       index.css
 public/
   apps/<id>/    icon, phone-N.jpg, wide-N.jpg for each product
   Farhan_Sayyed_Full_Stack_Engineer.pdf
 scripts/
-  prerender.mjs        writes finished HTML into dist/ and checks it
+  prerender.mjs        renders the page with React into dist/index.html and checks it
   generate-og.mjs      builds public/og.jpg (link preview image)
   shots.mjs            screenshots of dist/ at desktop, laptop and phone sizes
   prepare-assets.py    rebuilds public/apps from the project folders
@@ -67,5 +68,6 @@ python scripts/prepare-assets.py   # rebuild product images (needs Pillow)
 
 ## Deploy
 
-`vercel.json` is included. Import the folder into Vercel, or upload `dist/` to any static host.
-The build needs Playwright with Chromium for the prerender step: `npx playwright install chromium`.
+`vercel.json` is included. Import the repository into Vercel, or upload `dist/` to any static host.
+The build needs only Node. The prerender step uses React's server renderer, not a browser.
+Playwright is used only by the local `og` and `screenshots` scripts.

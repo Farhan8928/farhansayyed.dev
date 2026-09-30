@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/prerender.mjs",
+    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
     "build:fast": "vite build",
     "preview": "vite preview",
-    "prerender": "node scripts/prerender.mjs",
+    "prerender": "vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
     "screenshots": "node scripts/shots.mjs",
     "og": "node scripts/generate-og.mjs"
   },
