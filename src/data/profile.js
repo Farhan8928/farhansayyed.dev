@@ -29,7 +29,7 @@ export const profile = {
   geo: { lat: 19.076, lng: 72.8777 },
 
   social: {
-    linkedin: 'https://www.linkedin.com/in/farhan-sayyed',
+    linkedin: 'https://www.linkedin.com/in/farhan-sayyed-78ab67340',
     github: 'https://github.com/Farhan8928'
   },
 
