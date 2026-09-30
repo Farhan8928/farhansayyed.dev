@@ -13,7 +13,7 @@ export const profile = {
 
   // Live production domain. Canonical URLs, OG tags and JSON-LD derive from it.
   // Change this single value when the site moves.
-  siteUrl: 'https://farhansayyed.dev',
+  siteUrl: 'https://farhansayyed-dev.vercel.app',
 
   email: 'farhan.sayyed.tech@gmail.com',
   phone: '+918928040454',          // E.164, for tel: links

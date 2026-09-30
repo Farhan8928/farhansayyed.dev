@@ -56,7 +56,7 @@ scripts/
 - **Name, email, phone, links, availability:** `src/data/profile.js`
 - **Add or edit a product:** `src/data/apps.js`. Put its images in `public/apps/<id>/`.
 - **Replace the resume:** overwrite the PDF in `public/` and keep the same file name.
-- **Domain:** replace `https://farhansayyed.dev` in `src/data/profile.js` and `index.html`, then run `npm run og`.
+- **Domain:** the site lives at `https://farhansayyed-dev.vercel.app`. To move it, replace that address in `src/data/profile.js` and `index.html`, then run `npm run og`.
 
 ## Other scripts
 
