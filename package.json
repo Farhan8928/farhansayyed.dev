@@ -9,7 +9,7 @@
     "build:fast": "vite build",
     "preview": "vite preview",
     "prerender": "node scripts/prerender.mjs",
-    "screenshots": "node scripts/capture-screenshots.mjs",
+    "screenshots": "node scripts/shots.mjs",
     "og": "node scripts/generate-og.mjs"
   },
   "dependencies": {

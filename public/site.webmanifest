@@ -1,12 +1,12 @@
 {
   "name": "Farhan Sayyed — Full-Stack Engineer",
   "short_name": "Farhan",
-  "description": "Full-stack engineer in Mumbai. Every project is a receipt: the decision, and what it measured.",
+  "description": "Full-stack engineer in Mumbai. Products shipped to web, Android, iOS and desktop.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#F3EFE6",
-  "theme_color": "#F3EFE6",
+  "background_color": "#09090B",
+  "theme_color": "#09090B",
   "lang": "en-IN",
   "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
 }

@@ -1,53 +1,71 @@
 # Farhan Sayyed — Portfolio
 
-Same folder pattern as the DuoStack site (Vite + React + Tailwind, `src/data`
-→ `src/sections` → `src/components`, prerendered on build). The design is its
-own: paper, ink and receipts.
+Personal portfolio of Farhan Sayyed, full-stack engineer in Mumbai.
+Built with Vite, React 18, Tailwind CSS and Framer Motion. One page, prerendered to static HTML on build.
 
-## The idea
-
-1. **The first screen runs the proof.** Two bars race at the real measured
-   durations: the fixed billing report finishes in 152 ms, the old one takes
-   the full 10.5 seconds. The reader feels the wait that was removed.
-2. **Every project is a receipt.** Each line is a decision and what it
-   measured. Tapping a line opens the problem behind it and what it cost.
-3. **"How long do you have?"** The header switch reshapes the page:
-   30 seconds (race, brief, contact), 3 minutes (+ four receipts, stack),
-   everything (+ case notes, audit trail, more work, about).
-4. **Copy a pitch.** One button puts a 3-line summary on the recruiter's
-   clipboard, ready to forward to a hiring manager.
-
-## Run
+## Run it
 
 ```bash
 npm install
 npm run dev        # http://localhost:5174
-npm run build      # vite build + prerender (what Vercel runs)
-npm run og         # regenerate public/og.jpg
+npm run build      # production build + prerender into dist/
+npm run preview    # serve dist/ locally
 ```
 
-## Map
+## The idea
+
+The hero is a phone that works. Its home screen holds the products Farhan has shipped, with their real icons.
+Tapping an icon opens that app and plays real screens from it, and the accent colour of the whole page
+changes to match the product. The dock on the phone holds working links: resume, email, GitHub, LinkedIn.
+
+Below the hero:
+
+| Section      | What it shows                                                        |
+| ------------ | -------------------------------------------------------------------- |
+| Work         | Five products as stacked cards, then a grid of twelve more           |
+| What I do    | Five tiles: one codebase, speed, multi-tenant SaaS, CI/CD, AI        |
+| Experience   | Short story, three numbers, timeline                                 |
+| Stack        | Tools grouped by area, plus what is being learned now                |
+| Contact      | Click-to-copy email, WhatsApp, resume, LinkedIn, GitHub              |
+
+## Folder pattern
+
+Content lives in `src/data`, page sections in `src/sections`, shared pieces in `src/components`.
+To change text, edit the data files. The sections read from them.
 
 ```
 src/
-  data/        profile.js   identity, links, resume path — edit once
-               projects.js  the four receipts + moreWork
-               decisions.js case notes
-               proof.js     audit trail + the race durations
-               stack.js     tools with a reason each; learning[]
-               timeline.js  career dates (must match the resume PDF)
-               pitch.js     the clipboard pitch
-  sections/    Hero, Brief, Work, Decisions, Proof, Stack, About, Contact
-  components/  Header (depth switch), Race, Receipt, Lightbox, CopyPitch
-  lib/         mode.jsx (reading depth), env.js (prerender flag)
-public/        projects/ screenshots, resume PDF, og.jpg
-scripts/       prerender.mjs, generate-og.mjs, snapshot.mjs, capture-screenshots.mjs
+  data/         profile.js  apps.js  stack.js  timeline.js
+  sections/     Hero  Strip  Work  Skills  Experience  Stack  Contact
+  components/   Nav  HomePhone  Frames  AppIcon  Reveal
+  lib/          accent.jsx (page accent colour)  env.js
+  styles/       index.css
+public/
+  apps/<id>/    icon, phone-N.jpg, wide-N.jpg for each product
+  Farhan_Sayyed_Full_Stack_Engineer.pdf
+scripts/
+  prerender.mjs        writes finished HTML into dist/ and checks it
+  generate-og.mjs      builds public/og.jpg (link preview image)
+  shots.mjs            screenshots of dist/ at desktop, laptop and phone sizes
+  prepare-assets.py    rebuilds public/apps from the project folders
 ```
 
-## Rules
+## Common changes
 
-- A number goes on the page only if `proof.js` can name its method and file.
-- The prerendered HTML is always the full depth, so crawlers and link
-  previews see everything.
-- `profile.siteUrl` and the URLs in `index.html` say `farhansayyed.dev`.
-  Change them when the real domain exists, then run `npm run og`.
+- **Name, email, phone, links, availability:** `src/data/profile.js`
+- **Add or edit a product:** `src/data/apps.js`. Put its images in `public/apps/<id>/`.
+- **Replace the resume:** overwrite the PDF in `public/` and keep the same file name.
+- **Domain:** replace `https://farhansayyed.dev` in `src/data/profile.js` and `index.html`, then run `npm run og`.
+
+## Other scripts
+
+```bash
+npm run og            # regenerate the link preview image
+npm run screenshots   # capture dist/ into .snapshots/ and report console errors
+python scripts/prepare-assets.py   # rebuild product images (needs Pillow)
+```
+
+## Deploy
+
+`vercel.json` is included. Import the folder into Vercel, or upload `dist/` to any static host.
+The build needs Playwright with Chromium for the prerender step: `npx playwright install chromium`.

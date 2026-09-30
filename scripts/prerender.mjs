@@ -78,9 +78,9 @@ async function prerenderRoute(browser, baseUrl, route) {
       boot,
       words: text ? text.split(' ').length : 0,
       brand: text.includes('Farhan'),
-      receipt: text.includes('152'),
+      products: text.includes('Plusveda') && text.includes('AshShifa'),
       h1: document.querySelectorAll('#root h1').length,
-      sections: ['work', 'decisions', 'proof', 'stack', 'about', 'contact'].filter((id) => !document.getElementById(id))
+      sections: ['work', 'skills', 'experience', 'stack', 'contact'].filter((id) => !document.getElementById(id))
     }
   })
 
@@ -94,7 +94,7 @@ function assertRendered(s, route) {
   if (s.boot) fail('#root still holds the boot spinner — React never mounted')
   if (s.words < 400) fail(`only ${s.words} words of rendered text`)
   if (!s.brand) fail('name absent from rendered text')
-  if (!s.receipt) fail('the headline number (152 ms) is missing — the terminal did not render')
+  if (!s.products) fail('the products are missing from the rendered text')
   if (s.h1 === 0) fail('no <h1> inside #root')
   if (s.sections.length) fail(`sections missing from DOM: ${s.sections.join(', ')}`)
 }
