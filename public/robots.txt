@@ -1,0 +1,7 @@
+# Farhan Sayyed — portfolio
+User-agent: *
+Allow: /
+Disallow: /*.json$
+
+# Let LinkedIn, Slack, WhatsApp and search engines read the prerendered HTML.
+# The page is static after build; there is nothing to protect.
