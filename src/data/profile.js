@@ -48,10 +48,10 @@ export const profile = {
     hoursEnd: 22
   },
 
-  employer: { name: 'FiveM Infotech', role: 'Full-Stack Developer', since: 'Feb 2025' },
+  employer: { name: 'FiveM Infotech', role: 'Full-Stack Developer', since: 'Sep 2023' },
   studio:   { name: 'DuoStack', role: 'Co-founder', url: 'https://duostack.in' },
 
-  years: '2.5+',
+  years: '3+',
   shipped: '12+',
   industries: ['healthcare', 'finance', 'education', 'logistics', 'retail', 'manufacturing']
 }

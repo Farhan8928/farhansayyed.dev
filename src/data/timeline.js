@@ -3,7 +3,7 @@
 
 export const timeline = [
   {
-    when: 'Feb 2025 — now',
+    when: 'Sep 2023 — now',
     title: 'Full-Stack Developer',
     org: 'FiveM Infotech, Mumbai',
     what:
@@ -18,14 +18,6 @@ export const timeline = [
       'A two-engineer studio shipping web, mobile and CRM products for clients in India, the UAE and Europe. I run engineering; my co-founder runs product.',
     tags: ['React', 'Next.js', 'Node', 'Expo'],
     link: 'https://duostack.in'
-  },
-  {
-    when: 'Jun 2024 — Jan 2025',
-    title: 'Software Developer Intern',
-    org: 'Allied, Mumbai',
-    what:
-      'Financial reporting dashboards in Next.js and NestJS for the finance team. PostgreSQL schema and Prisma tuning cut query time 60%; Redis caching lifted report performance 40%.',
-    tags: ['Next.js', 'NestJS', 'PostgreSQL', 'Redis', 'AWS Cognito']
   },
   {
     when: '2020 — 2023',

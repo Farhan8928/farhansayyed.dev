@@ -22,7 +22,7 @@ Below the hero:
 
 | Section      | What it shows                                                        |
 | ------------ | -------------------------------------------------------------------- |
-| Work         | Five products as stacked cards, then a grid of twelve more           |
+| Work         | Six products as stacked cards, then a grid of twelve more            |
 | What I do    | Five tiles: one codebase, speed, multi-tenant SaaS, CI/CD, AI        |
 | Experience   | Short story, three numbers, timeline                                 |
 | Stack        | Tools grouped by area, plus what is being learned now                |

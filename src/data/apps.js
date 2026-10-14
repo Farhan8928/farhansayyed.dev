@@ -65,6 +65,30 @@ export const apps = [
     featured: true
   },
   {
+    id: 'roadaxis',
+    name: 'RoadAxis',
+    title: 'Garage & Recovery Booking',
+    category: 'Marketplace · UK & UAE',
+    year: '2026',
+    rgb: '249 115 22',
+    icon: `${dir('roadaxis')}/icon.svg`,
+    phones: phones('roadaxis', 3),
+    wides: wides('roadaxis', 3),
+    platforms: ['Web', 'Mobile web'],
+    tagline: 'Find a garage you can trust, in the UK or the UAE.',
+    summary:
+      'Drivers find and book garages, tyre centres and recovery firms near them, and each business gets its requests on WhatsApp. One site serves both countries, with every listing in its own currency, time zone and address format.',
+    points: [
+      'Made the slowest search 11× faster, from 1.1 seconds to 99 milliseconds. Every search now answers in under 100 ms across 10,000 listings.',
+      'Added the UAE as a second market on the same site. Everything that differs by country lives in one table, so a third country is one new entry.',
+      'Handed over with 965 API checks and 707 UI checks on phone and laptop, none failing.'
+    ],
+    metrics: [{ v: '99 ms', l: 'slowest search' }, { v: '2', l: 'countries' }, { v: '1,672', l: 'automated checks' }],
+    stack: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB', 'Leaflet', 'WhatsApp API'],
+    link: { label: 'Visit live site', href: 'https://rx.fiveminfotech.com/' },
+    featured: true
+  },
+  {
     id: 'ashshifa',
     name: 'AshShifa',
     title: 'Islamic Companion App',
@@ -73,18 +97,19 @@ export const apps = [
     rgb: '214 176 62',
     icon: `${dir('ashshifa')}/icon.png`,
     phones: phones('ashshifa', 4),
-    wides: [],
-    platforms: ['Android', 'iOS'],
+    wides: wides('ashshifa', 2),
+    wideLabel: 'AshShifa on Android TV',
+    platforms: ['Android', 'iOS', 'Android TV'],
     tagline: 'Quran, prayer times, Qibla and azan in one app.',
     summary:
-      'An all-in-one Islamic app: the full Quran, accurate prayer times with azan, Qibla direction, duas, tasbeeh, hadith, the 99 Names and a nearby-masjid finder. Live on Google Play in 176 countries.',
+      'An all-in-one Islamic app: the full Quran, accurate prayer times with azan, Qibla direction, duas, tasbeeh, hadith, the 99 Names and a nearby-masjid finder. Live on Google Play in 176 countries, on phones and on Android TV.',
     points: [
       'Prayer times with an azan that plays on time, even when the app is closed.',
       'The full Quran in page-by-page mushaf mode, plus Qibla, duas, tasbeeh and hadith: 15 features in one app.',
-      'Released to Google Play worldwide, with automated Android and iOS builds.'
+      'A separate Android TV app: a prayer clock for the living-room wall, Quran recitation and azan, all on the remote, reusing the phone app’s prayer and Quran logic.'
     ],
-    metrics: [{ v: '176', l: 'countries' }, { v: '15', l: 'features' }, { v: '2', l: 'platforms' }],
-    stack: ['React Native', 'Expo', 'Zustand', 'Node.js', 'MongoDB', 'Firebase'],
+    metrics: [{ v: '176', l: 'countries' }, { v: '15', l: 'features' }, { v: '3', l: 'platforms' }],
+    stack: ['React Native', 'Expo', 'Android TV', 'Zustand', 'Node.js', 'MongoDB', 'Firebase'],
     link: { label: 'View on Google Play', href: 'https://play.google.com/store/apps/details?id=com.ashshifa.app' },
     featured: true
   },
@@ -188,24 +213,41 @@ export const apps = [
     metrics: [{ v: 'Live', l: 'GPS tracking' }, { v: '3', l: 'user apps' }, { v: '111', l: 'API endpoints' }],
     stack: ['React Native', 'Expo', 'Socket.IO', 'Node.js', 'MongoDB', 'Razorpay'],
     link: null
+  },
+  {
+    id: 'bharatrailgo',
+    name: 'BharatRailGo',
+    title: 'Railway Parcel Booking SaaS',
+    category: 'Logistics · SaaS',
+    year: '2026',
+    rgb: '239 68 68',
+    icon: `${dir('bharatrailgo')}/icon.png`,
+    phones: phones('bharatrailgo', 3),
+    wides: [],
+    platforms: ['Web', 'Android', 'iOS', 'Windows'],
+    tagline: 'Bilti, GST invoices and delivery for parcel agents.',
+    summary: 'Railway parcel agents issue consignment notes, raise GST invoices, track each parcel to delivery and collect payments. Many agencies share one platform, and each sees only its own data.',
+    metrics: [{ v: '109', l: 'API endpoints' }, { v: '101', l: 'backend tests' }, { v: '4', l: 'platforms' }],
+    stack: ['Expo', 'Electron', 'Node.js', 'MongoDB', 'Razorpay'],
+    link: { label: 'Visit site', href: 'https://saas-bharat-rail-go-web.vercel.app/' }
   }
 ]
 
 export const byId = (id) => apps.find((a) => a.id === id)
 export const featured = apps.filter((a) => a.featured)
-export const homeApps = ['hms', 'plusveda', 'ashshifa', 'parentai', 'outvue', 'rashtrafarm', 'classconnect', 'schoolride'].map(byId)
+export const homeApps = ['hms', 'plusveda', 'roadaxis', 'ashshifa', 'parentai', 'outvue', 'bharatrailgo', 'rashtrafarm', 'classconnect', 'schoolride'].map(byId)
 
 // The rest, one line each.
 export const more = [
   { name: 'Rashtrafarm', what: 'Goat farm management: animals, health, tasks, staff and finance', tag: 'Agriculture', appId: 'rashtrafarm' },
   { name: 'ClassConnect Pro', what: 'School and coaching ERP: fees, attendance, exams, HR', tag: 'Education', appId: 'classconnect' },
   { name: 'SchoolRide', what: 'Live GPS school-bus tracking for operators, drivers and parents', tag: 'Logistics', appId: 'schoolride' },
-  { name: 'BharatRailGo', what: 'Booking, bilti and GST billing for railway parcel agents', tag: 'Logistics · SaaS', glyph: 'train', rgb: '239 68 68' },
+  { name: 'BharatRailGo', what: 'Booking, bilti and GST billing for railway parcel agents', tag: 'Logistics · SaaS', appId: 'bharatrailgo' },
   { name: 'WhatsApp AI Agent', what: 'AI agents on WhatsApp, each business with its own persona and knowledge', tag: 'AI · SaaS', glyph: 'chat', rgb: '37 211 102' },
   { name: 'Baker & Co CRM', what: 'Visa sales pipeline for a UAE consultancy', tag: 'CRM · UAE', glyph: 'briefcase', rgb: '163 230 53' },
   { name: 'ReimburseFlow', what: 'Expense approvals with SAP ERP posting', tag: 'Finance', glyph: 'receipt', rgb: '56 189 248' },
+  { name: 'GensetGo', what: 'Multi-tenant SaaS for generator dealers: sales, service contracts, rentals and compliance', tag: 'Manufacturing · SaaS', glyph: 'bolt', rgb: '251 146 60' },
   { name: 'SRF Power CRM', what: 'Generator sales CRM with quotations and lead sync', tag: 'Manufacturing', glyph: 'bolt', rgb: '250 204 21' },
-  { name: 'RoadAxis', what: 'Helps UK drivers find and book a trusted garage, tyre centre or recovery service', tag: 'Marketplace · UK', glyph: 'car', rgb: '251 113 133' },
   { name: 'Alwaris Logistics ERP', what: 'Freight bookings, bills of lading, cost sheets and invoices in one system', tag: 'Logistics · ERP', glyph: 'truck', rgb: '129 140 248' },
   { name: 'AllFreshh', what: 'Fruit and vegetable delivery store with OTP login, cart and referral discounts', tag: 'E-commerce', glyph: 'basket', rgb: '74 222 128' },
   { name: 'Khayyat Shamsan', what: 'English and Arabic website for a men’s tailoring house in Saudi Arabia', tag: 'Website · KSA', glyph: 'scissors', rgb: '226 190 130' }

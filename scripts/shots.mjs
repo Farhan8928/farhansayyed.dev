@@ -39,7 +39,7 @@ const walk = async (page) => {
   })
   await page.waitForTimeout(700)
 }
-const CASES = ['hms', 'plusveda', 'ashshifa', 'parentai', 'outvue']
+const CASES = ['hms', 'plusveda', 'roadaxis', 'ashshifa', 'parentai', 'outvue']
 // A work card is sticky, so its own position says nothing once it is stuck.
 // Its place in normal flow is the list's top plus everything above it.
 const caseTop = (page, id) => page.evaluate((id) => {
@@ -58,7 +58,7 @@ for (const [name, vp] of VIEWS) {
     await page.evaluate(() => window.scrollTo(0, 640)); await page.waitForTimeout(500)
     await page.screenshot({ path: join(OUT, 'phone-hero-2.png') })
   }
-  for (const app of ['AshShifa', 'HMS', 'SchoolRide']) {
+  for (const app of ['AshShifa', 'HMS', 'SchoolRide', 'RoadAxis', 'BharatRailGo']) {
     await page.getByRole('button', { name: `Open ${app}` }).click(); await page.waitForTimeout(1100)
     await page.screenshot({ path: join(OUT, `${name}-open-${app.toLowerCase()}.png`) })
     await page.getByRole('button', { name: 'Home', exact: true }).click(); await page.waitForTimeout(700)

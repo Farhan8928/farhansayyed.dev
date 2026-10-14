@@ -39,7 +39,15 @@ APPS = {
     wides=['inventory-saas-both-fiveM/landing/public/shots/dashboard.png']),
   'ashshifa': dict(
     icon='Doctor-both/22-04-26DR-front/store-assets/play-icon-512.png',
-    phones=[f'Doctor-both/22-04-26DR-front/store-assets/raw-screens/{n}.png' for n in ('home', 'quran', 'prayertimes', 'qibla')]),
+    phones=[f'Doctor-both/22-04-26DR-front/store-assets/raw-screens/{n}.png' for n in ('home', 'quran', 'prayertimes', 'qibla')],
+    wides=[f'Doctor-both/22-04-26DR-front/store-assets/screenshots-tv/{n}.png' for n in ('01-home', '03-player')]),
+  'roadaxis': dict(
+    icon_svg='roadaxis-both/raod-axis-front/public/favicon.svg',
+    phones=[f'roadaxis-both/docs/{n}.png' for n in ('ui-home-phone', 'ui-search-phone', 'uae-home-phone')],
+    wides=[f'roadaxis-both/docs/{n}.png' for n in ('ui-home-laptop', 'ui-search-map', 'uae-search')]),
+  'bharatrailgo': dict(
+    icon='saad-cargo-inventory-saas-both/bharatrailgo-front/store-assets/play-icon-512.png',
+    phones=[f'saad-cargo-inventory-saas-both/bharatrailgo-front/store-assets/raw-screens/{n}.png' for n in ('board', 'bilti', 'quick-entry')]),
   'parentai': dict(
     icon='Parent-Ai-both/28-8-26-prenting-front/store-assets/play-icon-512.png',
     phones=['Parent-Ai-both/28-8-26-prenting-front/store-assets/raw-screens/01-tonight.png', 'Parent-Ai-both/28-8-26-prenting-front/store-assets/raw-screens/02-progress.png', 'Parent-Ai-both/28-8-26-prenting-front/docs/screens/09-session-phone.png'],
@@ -53,7 +61,11 @@ APPS = {
   'classconnect': dict(icon='class-connect-both-fiveM/7-7-26-classConnect-front/assets/brand/logo.png'),
 }
 
+import sys
+ONLY = set(sys.argv[1:])   # optional: build only these apps
+
 for app, a in APPS.items():
+    if ONLY and app not in ONLY: continue
     d = os.path.join(OUT, app); os.makedirs(d, exist_ok=True)
     if 'icon' in a: icon(os.path.join(SRC, a['icon']), os.path.join(d, 'icon.png'))
     if 'icon_svg' in a: shutil.copy(os.path.join(SRC, a['icon_svg']), os.path.join(d, 'icon.svg'))

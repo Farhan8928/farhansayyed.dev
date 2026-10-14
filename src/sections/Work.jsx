@@ -18,7 +18,7 @@ export default function Work() {
             <h2 className="h-sec mt-3">Products I built,<br />start to finish.</h2>
           </div>
           <p className="max-w-sm text-[16px] leading-relaxed text-zinc-400">
-            Five of them up close. Each one is live or in daily use, and I worked on all of it: database, API, apps and deployment.
+            Six of them up close. Each one is live or in daily use, and I worked on all of it: database, API, apps and deployment.
           </p>
         </Reveal>
 
@@ -138,7 +138,7 @@ function Case({ app, i, onEnter, onBack }) {
         <div className="relative min-h-[380px] overflow-hidden lg:min-h-[640px]"
           style={{ background: `radial-gradient(110% 90% at 80% 10%, rgb(${app.rgb} / .38), rgb(${app.rgb} / .08) 55%, transparent 80%)` }}>
           {hasWide && (
-            <Browser url={app.link?.href?.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') ?? app.name.toLowerCase()}
+            <Browser url={app.wideLabel ?? app.link?.href?.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') ?? app.name.toLowerCase()}
               src={app.wides[0]} alt={`${app.name} on desktop`}
               className="absolute left-8 top-10 w-[135%] sm:left-12 lg:top-16 lg:w-[150%]" />
           )}
