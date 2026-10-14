@@ -29,7 +29,7 @@ export default function Contact() {
             <span className="truncate font-display text-[15px] font-medium sm:text-2xl">{profile.email}</span>
             <span className="tint grid h-10 w-10 shrink-0 place-items-center rounded-full bg-accent text-black">{copied ? <Check size={17} /> : <Copy size={16} />}</span>
           </button>
-          <p className="mt-2 h-5 text-sm text-zinc-500">{copied ? 'Copied to your clipboard' : 'Click to copy my email'}</p>
+          <p className="mt-2 h-5 text-sm text-zinc-400">{copied ? 'Copied to your clipboard' : 'Click to copy my email'}</p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <a href={contact.whatsapp} target="_blank" rel="noopener noreferrer" className="btn-primary"><MessageCircle size={16} /> WhatsApp me</a>
@@ -40,7 +40,7 @@ export default function Contact() {
         </Reveal>
       </div>
 
-      <footer className="container-x relative mt-24 flex flex-col items-center justify-between gap-2 border-t border-white/[0.07] pt-6 text-sm text-zinc-500 sm:flex-row">
+      <footer className="container-x relative mt-24 flex flex-col items-center justify-between gap-2 border-t border-white/[0.07] pt-6 text-sm text-zinc-400 sm:flex-row">
         <span>© {new Date().getFullYear()} {profile.name} · {profile.city}, {profile.country}</span>
         <span>{contact.whatsappLabel}</span>
       </footer>

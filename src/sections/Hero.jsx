@@ -137,7 +137,7 @@ export default function Hero() {
                   </div>
                 </motion.div>
               ) : (
-                <motion.p key="hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-2 text-center text-sm text-zinc-500">
+                <motion.p key="hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-2 text-center text-sm text-zinc-400">
                   ↑ That phone works. Tap any app to open it.
                 </motion.p>
               )}
