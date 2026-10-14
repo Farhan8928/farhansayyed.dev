@@ -29,7 +29,7 @@ export default function Experience() {
           {timeline.map((t, i) => (
             <Reveal key={t.title + t.org} delay={i * 0.06}>
               <li className="group grid gap-2 border-t border-white/[0.08] py-7 first:border-t-0 first:pt-0 sm:grid-cols-12 sm:gap-6">
-                <p className="pt-1 text-sm text-zinc-400 sm:col-span-4">{t.when}</p>
+                <p className="pt-1 text-sm text-zinc-500 sm:col-span-4">{t.when}</p>
                 <div className="sm:col-span-8">
                   <h3 className="font-display text-2xl font-semibold leading-tight">{t.title}</h3>
                   <p className="tint mt-1 text-[15px] font-medium text-accent">
